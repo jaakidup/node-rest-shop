@@ -8,8 +8,8 @@ const orderRoutes = require('./api/routes/orders');
 
 
 
+// middleware to parse incoming json body data
 app.use(express.json());
-
 // HTTP request logger, see documentation for other settings
 app.use(morgan('dev'));
 
