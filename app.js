@@ -4,9 +4,11 @@ const app = express();
 // const productRoutes = require('./api/routes/products');
 
 const productRoutes = require('./api/routes/products');
+const orderRoutes = require('./api/routes/orders');
 
 
 app.use('/products', productRoutes);
+app.use('/orders', orderRoutes);
 
 // .use is to run a middleware
 // app.use((req, res, next) => {
