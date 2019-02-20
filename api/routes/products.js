@@ -94,7 +94,6 @@ router.get('/', (req, res, next) => {
             res.status(200).json(response);
 
         }).catch(error => {
-            // console.log(err);
             res.status(500).json({
                 error: error
             });
@@ -109,7 +108,6 @@ router.post('/', (req, res, next) => {
         price: req.body.price
     });
     product.save().then(result => {
-        // console.log(result);
         res.status(201).json({
             message: "Created a product",
             createdProduct: {
@@ -123,7 +121,6 @@ router.post('/', (req, res, next) => {
             }
         });
     }).catch(error => {
-        // console.log(error);
         res.status(500).json({
             error: error
         })
@@ -154,7 +151,6 @@ router.get('/:productId', (req, res, next) => {
             }
         })
         .catch(error => {
-            console.log(error);
             res.status(500).json({ error: error });
         });
 });
@@ -168,10 +164,9 @@ router.patch('/:productId', (req, res, next) => {
         updateOps[ops.propName] = ops.value;
     }
 
-    Product.update({ _id: id }, { $set: updateOps }).exec()
+    Product.update({ _id: id }, { $set: updateOps })
+        .exec()
         .then(result => {
-
-            console.log(result);
 
             const response = {
                 message: "Updated product!",
@@ -185,7 +180,6 @@ router.patch('/:productId', (req, res, next) => {
             res.status(200).json(response);
         })
         .catch(error => {
-            console.log(error);
             res.status(500).json({ error: error });
         });
 });
@@ -199,7 +193,6 @@ router.delete('/:productId', (req, res, next) => {
             res.status(200).json({ message: "Product deleted!" });
         })
         .catch(error => {
-            console.log(error);
             res.status(500).json({ error: error });
         });
 });
