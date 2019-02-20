@@ -4,34 +4,17 @@ const morgan = require('morgan');
 
 const mongoose = require('mongoose');
 
-// API Routes definitions
+// API Routes
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
-// Mongo
-// mongodb+srv://atlasuser:<PASSWORD>@node-rest-shop-70ldp.gcp.mongodb.net/test?retryWrites=true
-//
 
-// this one will get the password from an environment variable, maybe on cloud server
-// mongoose.connect('mongodb+srv://atlas:'+process.env.MONGO_ATLAS_PW+'@node-rest-shop-70ldp.gcp.mongodb.net/test?retryWrites=true', { useNewUrlParser: true });
-    
-// mongoose.connect('mongodb+srv://atlas:'+process.env.MONGO_ATLAS_PW+'@node-rest-shop-70ldp.gcp.mongodb.net/test?retryWrites=true', { useNewUrlParser: true }).then((result) =>{
 mongoose.connect('mongodb+srv://atlas:'+process.env.MONGO_ATLAS_PW+'@node-rest-shop-70ldp.gcp.mongodb.net/node-rest-shop?retryWrites=true', { useNewUrlParser: true }).then((result) =>{
         // console.log(result)    
 }).catch(error => console.log(error));
 
-
-
-
-// mongoose.connect('mongodb+srv://atlasuser:atlas@node-rest-shop-70ldp.gcp.mongodb.net/test?retryWrites=true', {useNewUrlParser: true});
-
-// These are some samples for saving to mongo through mongoose
-// const Cat = mongoose.model('Cat', { name: String });
-// const kitty = new Cat({ name: 'Zildjian' });
-// kitty.save().then(() => console.log('meow'));
-
-
-
+// This is to handle the deprecation warning
+// mongoose.Promise = global.Promise
 
 
 
