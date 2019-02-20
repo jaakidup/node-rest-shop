@@ -6,9 +6,12 @@ const Product = require('../model/product');
 
 
 router.get('/info', (req, res, next) => {
+    console.log(Product.schema.tree);
+
     res.status(200).json({
         message: "Definition of Product",
-        product: Product({ name: "some name", price: 23423 })
+        product: Product({ name: "some name", price: 23423 }),
+        schema: Product.schema.tree
     });
 });
 
