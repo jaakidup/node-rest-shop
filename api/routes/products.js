@@ -31,6 +31,7 @@ router.get('/', (req, res, next) => {
         });
 });
 
+
 router.post('/', (req, res, next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
@@ -46,7 +47,7 @@ router.post('/', (req, res, next) => {
     }).catch(error => {
         console.log(error);
         res.status(500).json({
-            error: err
+            error: error
         })
     });
 
