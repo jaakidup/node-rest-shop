@@ -73,9 +73,12 @@ router.get('/', (req, res, next) => {
 
             const response = {
                 info: {
-                    type: "GET",
-                    description: "Get info on the products API",
-                    url: domain + '/products/info'
+                    version: "1",
+                    request: {
+                        type: "GET",
+                        description: "Get info on the products API",
+                        url: domain + '/products/info'
+                    }
                 },
                 count: results.length,
                 products: results.map(result => {
