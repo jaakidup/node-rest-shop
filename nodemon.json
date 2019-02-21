@@ -2,6 +2,7 @@
     "env": {
         "MONGO_ATLAS_PW": "5WDE2rTlt6o8SZS2",
         "HOSTNAME": "127.0.0.1",
-        "PORT": "3030"
+        "PORT": "3030",
+        "JWT_KEY": "secret"
     }
 }
