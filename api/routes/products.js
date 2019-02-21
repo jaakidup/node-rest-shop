@@ -1,9 +1,40 @@
 const express = require('express');
 const router = express();
 
-const mongoose = require('mongoose');
 const Product = require('../model/product');
-const domain = require('../shared/domain')
+const domain = require('../shared/domain');
+
+
+const mongoose = require('mongoose');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        // cb(new Error("File upload destination error."), './uploads/');
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        // cb(null, file.filename);
+        // cb(new Error("File upload filename error."), new Date().toDateString() + file.originalname);
+        cb(null, new Date().toISOString() + file.originalname);
+    }
+});
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true); // will store the file
+    } else {
+        cb(null, false); // won't store the file
+    }
+};
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
+
+
 
 
 router.get('/info', (req, res, next) => {
@@ -31,7 +62,8 @@ router.get('/info', (req, res, next) => {
                 url: domain + "/products/",
                 body: {
                     name: "String",
-                    price: "Number"
+                    price: "Number",
+                    productImage: "String"
                 }
             }
         },
@@ -48,7 +80,11 @@ router.get('/info', (req, res, next) => {
                     {
                         "propName": "price",
                         "value": "Number"
-                    }]
+                    },{
+                        "propName": "productImage",
+                        "value": "String"
+                    }
+                ]
             }
         },
         {
@@ -67,7 +103,7 @@ router.get('/info', (req, res, next) => {
 router.get('/', (req, res, next) => {
 
     Product.find()
-        .select('name price _id')
+        .select('name price _id productImage')
         .exec()
         .then(results => {
 
@@ -86,6 +122,7 @@ router.get('/', (req, res, next) => {
                         name: result.name,
                         price: result.price,
                         _id: result._id,
+                        productImage: result.productImage,
                         url: {
                             type: 'GET',
                             url: domain + '/products/' + result._id
@@ -104,12 +141,14 @@ router.get('/', (req, res, next) => {
 });
 
 
-router.post('/', (req, res, next) => {
+router.post('/', upload.single('productImage'), (req, res, next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        productImage: req.file.path
     });
+
     product.save().then(result => {
         res.status(201).json({
             message: "Created a product",
@@ -117,15 +156,17 @@ router.post('/', (req, res, next) => {
                 name: result.name,
                 price: result.price,
                 id: result._id,
+                productImage: result.productImage,
                 url: {
                     type: 'GET',
-                    url: domain + '/products/' + results._id
+                    url: domain + '/products/' + result._id
                 }
             }
         });
-    }).catch(error => {
+    }).catch(err => {
+        console.log(err);
         res.status(500).json({
-            error: error
+            error: err
         })
     })
 });
@@ -134,7 +175,7 @@ router.post('/', (req, res, next) => {
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
-        .select('name price _id')
+        .select('name price _id productImage')
         .exec()
         .then(result => {
             if (result) {
@@ -159,6 +200,7 @@ router.get('/:productId', (req, res, next) => {
 });
 
 
+// TODO: add function to remove image when product is deleted or updated
 router.patch('/:productId', (req, res, next) => {
     const id = req.params.productId;
 
@@ -188,6 +230,7 @@ router.patch('/:productId', (req, res, next) => {
 });
 
 
+// TODO: add function to remove image when product is deleted or updated
 router.delete('/:productId', (req, res, next) => {
     const id = req.params.productId;
 
@@ -200,6 +243,17 @@ router.delete('/:productId', (req, res, next) => {
         });
 });
 
+// // TODO: add function to remove image when product is deleted or updated
+// DELETE ALL PRODUCTS
+// router.delete('/', (req, res, next) => {
+//     Product.deleteMany().exec().then(results => {
+//         res.status(200).json(results);
+//     }).catch(error => {
+//         res.status(500).json({
+//             error: error
+//         });
+//     });
+// });
 
 
 

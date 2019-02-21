@@ -23,6 +23,8 @@ app.use(express.json());
 // HTTP request logger, see documentation for other settings
 app.use(morgan('dev'));
 
+app.use('/uploads', express.static("uploads")); // make the uploads folder publicly available
+
 // Let's handle the CORS requests
 app.use((req, res, next) => {
     // res.header('Access-Control-Allow-Origin', "https://only.my.cool.url.com");
