@@ -2,6 +2,7 @@ const express = require('express');
 const router = express();
 const mongoose = require('mongoose');
 const domain = require('../shared/domain');
+const checkAuth = require('../middleware/check-auth');
 
 const Order = require('../model/order');
 const Product = require('../model/product');
@@ -51,7 +52,7 @@ router.get('/info', (req, res, next) => {
 
 
 
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
 
     Order.find()
         .select('_id quantity product')
@@ -90,7 +91,7 @@ router.get('/', (req, res, next) => {
 
 
 
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
 
     Product.findById(req.body.productId)
         .then(product => {
@@ -130,7 +131,7 @@ router.post('/', (req, res, next) => {
 
 
 
-router.get('/:orderId', (req, res, next) => {
+router.get('/:orderId', checkAuth, (req, res, next) => {
     const id = req.params.orderId;
 
     Order.findById(id)
@@ -158,7 +159,7 @@ router.get('/:orderId', (req, res, next) => {
         });
 });
 
-router.delete('/:orderId', (req, res, next) => {
+router.delete('/:orderId', checkAuth, (req, res, next) => {
     const id = req.params.orderId;
 
     Order.findByIdAndDelete({ _id: id })

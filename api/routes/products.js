@@ -4,6 +4,7 @@ const router = express();
 const Product = require('../model/product');
 const domain = require('../shared/domain');
 
+const checkAuth = require('../middleware/check-auth');
 
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -80,7 +81,7 @@ router.get('/info', (req, res, next) => {
                     {
                         "propName": "price",
                         "value": "Number"
-                    },{
+                    }, {
                         "propName": "productImage",
                         "value": "String"
                     }
@@ -141,7 +142,7 @@ router.get('/', (req, res, next) => {
 });
 
 
-router.post('/', upload.single('productImage'), (req, res, next) => {
+router.post('/', checkAuth, upload.single('productImage'), (req, res, next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -201,7 +202,7 @@ router.get('/:productId', (req, res, next) => {
 
 
 // TODO: add function to remove image when product is deleted or updated
-router.patch('/:productId', (req, res, next) => {
+router.patch('/:productId', checkAuth, (req, res, next) => {
     const id = req.params.productId;
 
     const updateOps = {};
@@ -231,7 +232,7 @@ router.patch('/:productId', (req, res, next) => {
 
 
 // TODO: add function to remove image when product is deleted or updated
-router.delete('/:productId', (req, res, next) => {
+router.delete('/:productId', checkAuth, (req, res, next) => {
     const id = req.params.productId;
 
     Product.deleteOne({ _id: id }).exec()
