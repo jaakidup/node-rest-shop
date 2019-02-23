@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 // API Routes
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
+const userRoutes = require('./api/routes/user');
 
 
 mongoose.connect('mongodb+srv://atlas:'+process.env.MONGO_ATLAS_PW+'@node-rest-shop-70ldp.gcp.mongodb.net/node-rest-shop?retryWrites=true', { useNewUrlParser: true }).then((result) =>{
@@ -43,6 +44,7 @@ app.use((req, res, next) => {
 // routes that handle requests
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
+app.use('/user', userRoutes);
 
 // Error handling middleware, 
 // this will catch all routes that didn't match any of the above

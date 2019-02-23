@@ -1,180 +1,25 @@
 const express = require('express');
 const router = express();
-const mongoose = require('mongoose');
 const domain = require('../shared/domain');
+const checkAuth = require('../middleware/check-auth');
 
-const Order = require('../model/order');
-const Product = require('../model/product');
+// const Order = require('../models/order');
+// const Product = require('../models/product');
 
-
-
-router.get('/info', (req, res, next) => {
-    const apidoc = [
-        {
-            request: {
-                type: "GET",
-                description: "Get all orders",
-                url: domain + "/orders"
-            }
-        },
-        {
-            request: {
-                type: "GET",
-                description: "Get order with ID:string",
-                url: domain + "/orders/:ID"
-            }
-        },
-        {
-            request: {
-                type: "POST",
-                description: "Create order",
-                url: domain + "/orders/",
-                body: {
-                    productId: "String",
-                    quantity: "Number"
-                }
-            }
-        },
-        {
-            request: {
-                type: "DELETE",
-                description: "Delete order with ID:string",
-                url: domain + "/orders/:ID"
-            }
-        },
-    ];
-
-    res.status(200).json(apidoc);
-
-});
+const OrdersController = require('../controllers/orders');
 
 
 
 
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, OrdersController.orders_get_all);
 
-    Order.find()
-        .select('_id quantity product')
-        .exec()
-        .then(results => {
-            res.status(200).json({
-                count: results.length,
-                info: {
-                    version: "1",
-                    request: {
-                        type: 'GET',
-                        description: 'Info on Orders API',
-                        url: domain + '/orders/info'
-                    }
-                },
-                orders: results.map(result => {
-                    return {
-                        _id: result._id,
-                        product: result.product,
-                        quantity: result.quantity,
-                        request: {
-                            type: 'GET',
-                            description: 'Get a single order',
-                            url: domain + '/orders/' + result._id
-                        }
-                    }
-                })
-            });
-        })
-        .catch(error => {
-            res.status(500).json({ error: error });
-        });
+router.get('/:orderId', checkAuth, OrdersController.orders_get_order);
 
-});
+router.get('/info', OrdersController.orders_get_api_info);
 
+router.post('/', checkAuth, OrdersController.orders_create_order);
 
-
-
-router.post('/', (req, res, next) => {
-
-    Product.findById(req.body.productId)
-        .then(product => {
-            if (!product) {
-                return res.status(404).json({
-                    message: 'Product not found!'
-                });
-            }
-            const order = new Order({
-                _id: mongoose.Types.ObjectId(),
-                quantity: req.body.quantity,
-                product: req.body.productId
-            });
-            return order.save();
-        }).then(result => {
-            res.status(201).json({
-                message: 'Order created!',
-                createdOrder: {
-                    _id: result._id,
-                    product: result.product,
-                    quantity: result.quantity
-                },
-                request: {
-                    type: 'GET',
-                    description: 'Get a single order',
-                    url: domain + '/orders/' + result._id
-                }
-            });
-        }).catch(error => {
-            res.status(500).json({
-                error: error
-            });
-        });
-
-});
-
-
-
-
-router.get('/:orderId', (req, res, next) => {
-    const id = req.params.orderId;
-
-    Order.findById(id)
-        .select("_id quantity product")
-        .exec()
-        .then(order => {
-            if (!order) {
-                return res.status(404).json({
-                    message: 'Order not found!'
-                });
-            }
-            res.status(200).json({
-                order: order,
-                request: {
-                    type: 'GET',
-                    description: 'Get all orders',
-                    url: domain + "/orders/"
-                }
-            });
-        })
-        .catch(error => {
-            res.status(404).json({
-                message: 'Order not found!'
-            });
-        });
-});
-
-router.delete('/:orderId', (req, res, next) => {
-    const id = req.params.orderId;
-
-    Order.findByIdAndDelete({ _id: id })
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'Order deleted!'
-            })
-        })
-        .catch(error => {
-            res.status(500).json({
-                error: error
-            });
-        });
-});
-
+router.delete('/:orderId', checkAuth, OrdersController.orders_delete_order);
 
 
 
