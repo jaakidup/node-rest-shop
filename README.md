@@ -4,7 +4,7 @@ For a simple web shop
 
 
 
-craete a file in the root directory named 'nodemon.json'
+Create a file in the root directory named 'nodemon.json'
 and paste this inside, change fields to suite deployment
 
 ```json
