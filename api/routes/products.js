@@ -34,19 +34,19 @@ const upload = multer({
 });
 
 
-router.get('/', ProductsController.products_get_all_products);
+router.get('/', ProductsController.get_all_products);
 
-router.post('/', checkAuth, upload.single('productImage'), ProductsController.products_create_product);
+router.post('/', checkAuth, upload.single('productImage'), ProductsController.create_product);
 
-router.get('/:productId', ProductsController.products_get_product);
+router.get('/:productId', ProductsController.get_product);
 
-router.patch('/:productId', checkAuth, ProductsController.products_update_product);
+router.patch('/:productId', checkAuth, ProductsController.update_product);
 
-router.delete('/:productId', checkAuth, ProductsController.products_delete_product);
+router.delete('/:productId', checkAuth, ProductsController.delete_product);
 
-// router.delete('/', ProductsController.products_delete_all_products);
+// router.delete('/', ProductsController.delete_all_products);
 
-router.get('/info', ProductsController.products_api_info);
+router.get('/info', ProductsController.api_info);
 
 
 module.exports = router;

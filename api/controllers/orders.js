@@ -4,7 +4,7 @@ const Order = require('../models/order');
 const Product = require('../models/product');
 const domain = require('../shared/domain');
 
-exports.orders_get_all = (req, res, next) => {
+exports.get_all = (req, res, next) => {
 
     Order.find()
         .select('_id quantity product')
@@ -40,7 +40,7 @@ exports.orders_get_all = (req, res, next) => {
 };
 
 
-exports.orders_create_order = (req, res, next) => {
+exports.create_order = (req, res, next) => {
     Product.findById(req.body.productId)
         .then(product => {
             if (!product) {
@@ -76,7 +76,7 @@ exports.orders_create_order = (req, res, next) => {
 };
 
 
-exports.orders_get_order = (req, res, next) => {
+exports.get_order = (req, res, next) => {
     const id = req.params.orderId;
 
     Order.findById(id)
@@ -105,7 +105,7 @@ exports.orders_get_order = (req, res, next) => {
 };
 
 
-exports.orders_delete_order = (req, res, next) => {
+exports.delete_order = (req, res, next) => {
     const id = req.params.orderId;
 
     Order.findByIdAndDelete({ _id: id })
@@ -123,7 +123,7 @@ exports.orders_delete_order = (req, res, next) => {
 };
 
 
-exports.orders_get_api_info = (req, res, next) => {
+exports.get_api_info = (req, res, next) => {
     const apidoc = [
         {
             request: {

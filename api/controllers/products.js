@@ -5,7 +5,7 @@ const domain = require('../shared/domain');
 
 
 
-exports.products_get_all_products = (req, res, next) => {
+exports.get_all_products = (req, res, next) => {
     Product.find()
         .select('name price _id productImage')
         .exec()
@@ -45,7 +45,7 @@ exports.products_get_all_products = (req, res, next) => {
 };
 
 
-exports.products_create_product = (req, res, next) => {
+exports.create_product = (req, res, next) => {
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -76,7 +76,7 @@ exports.products_create_product = (req, res, next) => {
 };
 
 
-exports.products_get_product = (req, res, next) => {
+exports.get_product = (req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
         .select('name price _id productImage')
@@ -104,7 +104,7 @@ exports.products_get_product = (req, res, next) => {
 };
 
 // TODO: add function to remove image when product is deleted or updated
-exports.products_update_product = (req, res, next) => {
+exports.update_product = (req, res, next) => {
     const id = req.params.productId;
 
     const updateOps = {};
@@ -133,7 +133,7 @@ exports.products_update_product = (req, res, next) => {
 };
 
 // TODO: add function to remove image when product is deleted or updated
-exports.products_delete_product = (req, res, next) => {
+exports.delete_product = (req, res, next) => {
     const id = req.params.productId;
 
     Product.deleteOne({ _id: id }).exec()
@@ -146,7 +146,7 @@ exports.products_delete_product = (req, res, next) => {
 };
 
 
-exports.products_delete_all_products = (req, res, next) => {
+exports.delete_all_products = (req, res, next) => {
     Product.deleteMany().exec().then(results => {
         res.status(200).json(results);
     }).catch(error => {
@@ -157,7 +157,7 @@ exports.products_delete_all_products = (req, res, next) => {
 };
 
 
-exports.products_api_info = (req, res, next) => {
+exports.api_info = (req, res, next) => {
     // console.log(Product.schema.tree);
 
     const apidoc = [

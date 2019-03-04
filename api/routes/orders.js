@@ -11,15 +11,15 @@ const OrdersController = require('../controllers/orders');
 
 
 
-router.get('/', checkAuth, OrdersController.orders_get_all);
+router.get('/', checkAuth, OrdersController.get_all);
 
-router.get('/:orderId', checkAuth, OrdersController.orders_get_order);
+router.get('/:orderId', checkAuth, OrdersController.get_order);
 
-router.get('/info', OrdersController.orders_get_api_info);
+router.get('/info', OrdersController.get_api_info);
 
-router.post('/', checkAuth, OrdersController.orders_create_order);
+router.post('/', checkAuth, OrdersController.create_order);
 
-router.delete('/:orderId', checkAuth, OrdersController.orders_delete_order);
+router.delete('/:orderId', checkAuth, OrdersController.delete_order);
 
 
 

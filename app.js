@@ -40,6 +40,16 @@ app.use((req, res, next) => {
     next();
 });
 
+// This is just a test function 
+// TODO: remove
+app.post('/test', (req, res) => {
+    console.log(req.body);
+    res.status(200).json({message: req.body})
+});
+
+
+
+
 
 // routes that handle requests
 app.use('/products', productRoutes);
